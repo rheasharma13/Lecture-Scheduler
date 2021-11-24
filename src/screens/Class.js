@@ -1,4 +1,4 @@
-import { IconButton } from "@material-ui/core";
+import { IconButton , Button} from "@material-ui/core";
 import { SendOutlined } from "@material-ui/icons";
 import moment from "moment";
 import React from "react";
@@ -33,18 +33,20 @@ function Class() {
     try {
       const myClassRef = await db.collection("classes").doc(id).get();
       const myClassData = await myClassRef.data();
-      console.log(myClassData);
+      
       let tempPosts = myClassData.posts;
       tempPosts.push({
         authorId: user.uid,
         content: announcementContent,
-        date: moment().format("MMM Do YY"),
+        date: moment().format("MMM Do YY  h:mm:ss"),
         image: user.photoURL,
         name: user.displayName,
+        isReported:false
       });
       myClassRef.ref.update({
         posts: tempPosts,
       });
+      setAnnouncementContent("");
     } catch (error) {
       console.error(error);
       alert(`There was an error posting the announcement, please try again!`);
@@ -71,26 +73,36 @@ function Class() {
     <div className="class">
       <div className="class__nameBox">
         <div className="class__name">{classData?.name}</div>
+        <p>Created By: {classData.creatorName}</p>
       </div>
+      <div className="class__nav">
+      <Button onClick={e=> {e.preventDefault() ; history.push("/class/"+id)}}>Lectures</Button>
+        <Button onClick={e=> {e.preventDefault() ; history.push("/class/"+id+"/discussion")}}>Discussion</Button>
+        <Button onClick={e=> {e.preventDefault() ; history.push("/class/"+id+"/assignments")}}>Assignments</Button>
+        
+        </div>
       <div className="class__announce">
         <img src={user?.photoURL} alt="My image" />
         <input
           type="text"
           value={announcementContent}
           onChange={(e) => setAnnouncementContent(e.target.value)}
-          placeholder="Announce something to your class"
+          placeholder="Share something with your class. Spark a discussion!"
         />
         <IconButton onClick={createPost}>
           <SendOutlined />
         </IconButton>
       </div>
-      {posts?.map((post) => (
+      {posts?.map((post,idx) => (
         <Announcement
           authorId={post.authorId}
           content={post.content}
           date={post.date}
           image={post.image}
           name={post.name}
+          classId={id}
+          index={idx}
+          // isReported={post.isReported}
         />
       ))}
     </div>

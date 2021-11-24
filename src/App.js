@@ -4,7 +4,9 @@ import Home from "./screens/Home";
 import Dashboard from "./screens/Dashboard";
 import Navbar from "./components/Navbar";
 import Class from "./screens/Class";
-
+import CreateClass from "./components/CreateClass";
+import LectureScreen from "./screens/LectureScreen";
+import AssignmentScreen from "./screens/AssignmentScreen";
 function App() {
   return (
     <div className="app">
@@ -19,8 +21,20 @@ function App() {
           </Route>
           <Route exact path="/class/:id">
             <Navbar />
+            <LectureScreen />
+          </Route>
+          <Route exact path="/class/:id/discussion">
+            <Navbar />
             <Class />
           </Route>
+          <Route exact path="/class/:id/assignments">
+            <Navbar />
+            <AssignmentScreen />
+          </Route>
+          {/* <Route exact path="/createclass">
+            <Navbar />
+            <CreateClass/>
+          </Route> */}
         </Switch>
       </Router>
     </div>

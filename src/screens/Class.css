@@ -7,7 +7,7 @@
   width: 100%;
   background-color: #0a9689;
   color: white;
-  height: 350px;
+  height: 250px;
   margin-top: 30px;
   border-radius: 10px;
   display: flex;
@@ -15,19 +15,34 @@
   align-items: flex-start;
   padding: 30px;
   font-weight: bold;
-  font-size: 43px;
+  font-size: 30px;
+}
+.class__nav {
+  width: 100%;
+  background-color:rgb(231, 248, 238);
+  color:#0a9689;
+  height: 60px;
+ 
+  border-radius: 10px;
+  display: flex;
+  
+  justify-content: center;
+ 
+  font-weight: bold;
+  font-size: 16px;
 }
 
+
 .class__announce {
-  display: flex;
-  align-items: center;
+  
+  align-items: left;
   width: 100%;
   padding: 20px;
   margin-bottom: 25px;
-  box-shadow: 0px 1px 6px -2px black;
+  box-shadow: 0px 1px 6px -2px;
   justify-content: space-between;
   border-radius: 15px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 
 .class__announce > img {
@@ -36,7 +51,7 @@
   border-radius: 9999px;
 }
 
-.class__announce > input {
+.class__announce > input,label,h2 {
   border: none;
   padding: 15px 20px;
   width: 100%;

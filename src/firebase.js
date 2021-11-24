@@ -1,17 +1,25 @@
 import firebase from "firebase";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAwC3qO_f1vXK2C7KdmbXt3XIYMk7qeREY",
-  authDomain: "classroom-clone-ed3cd.firebaseapp.com",
-  projectId: "classroom-clone-ed3cd",
-  storageBucket: "classroom-clone-ed3cd.appspot.com",
-  messagingSenderId: "846495130260",
-  appId: "1:846495130260:web:565176629f57de3e010a81",
-  measurementId: "G-8SR3368XL1",
+  apiKey: "AIzaSyAXQlPCChCX30xfqy9f5R-vJH0TGj3Tw44",
+
+  authDomain: "virtual-classroom-b6fed.firebaseapp.com",
+
+  databaseURL: "https://virtual-classroom-b6fed-default-rtdb.firebaseio.com",
+
+  projectId: "virtual-classroom-b6fed",
+
+  storageBucket: "virtual-classroom-b6fed.appspot.com",
+
+  messagingSenderId: "115896894901",
+
+  appId: "1:115896894901:web:74f2270878d23f3879c5fc"
+
 };
 
 const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
+var storage = firebase.storage();
 const db = app.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 // Sign in and check or create account in firestore
@@ -30,6 +38,7 @@ const signInWithGoogle = async () => {
       await db.collection("users").add({
         uid: user.uid,
         enrolledClassrooms: [],
+        createdClassrooms:[]
       });
     }
   } catch (err) {
@@ -40,4 +49,4 @@ const logout = () => {
   auth.signOut();
 };
 
-export { app, auth, db, signInWithGoogle, logout };
+export { app, auth, db, signInWithGoogle, logout ,storage};

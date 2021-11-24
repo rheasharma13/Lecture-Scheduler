@@ -1,20 +1,21 @@
 import { Button,Menu, MenuItem,IconButton } from "@material-ui/core";
 import {  MoreVert } from "@material-ui/icons";
+
 import React from "react";
 import "./Announcement.css";
-import { auth, db } from "../firebase";
+import { auth, db ,storage} from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {useHistory} from "react-router-dom"
+import File from "../components/File"
 
-
-function Announcement({ image, name, date, content, authorId ,classId}) {
+function Assignment({ creatorId,title,date,note,files,classId,name,image}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, loading, error] = useAuthState(auth);
   const open = Boolean(anchorEl);
   const [classRef,setClassRef]=React.useState({});
   const[classData,setClassData]=React.useState({});
   const history=useHistory();
-  const [isReported,setReported]=React.useState(false);
+  
   React.useEffect(() => {
     // const myClassRef = await db.collection("classes").doc(id).get();
     // const myClassData = await myClassRef.data();
@@ -37,84 +38,50 @@ function Announcement({ image, name, date, content, authorId ,classId}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
-  const reportPost= async ()=>{
-    if(user)
-    {
-     
-    try{
-      setReported(true)
-   
-    
-    let reportedPosts = classData.reportedPosts;
-    let allPosts=classData.posts;
-    for(var post in allPosts)
-    {
-      if(post.authorId==authorId && post.date==date)
-      {
-        console.log("found")
-        post.isReported=true;
-      }
-    }
-    console.log(allPosts)
-    reportedPosts.push(
-     {
-      
-           authorId: user.uid,
-            content: content,
-            date: date,
-            image:image,
-            name: name,
-         
-     }  
-    )
-    classRef.ref.update({
-      reportedPosts: reportedPosts,
-    posts:allPosts
+ const  displayUploadedFiles= ()=> {
+    return files.map((file, index) => {
+        return (
+            <div className="assignment-file" key={index}>
+              
+                <p className="assignment-file-name">{file.fileName}</p>
+                
+                
+                <a href={file.downloadURL} target="_blank" rel="noopener noreferrer">Download File</a>
+
+            </div>
+        );
     });
-    
-      }
-      catch(error)
-      {
-        console.error(error);
-        alert(`There was an error reporting the post, please try again!`);
-      }
-    }
-    else
-    {
-      history.push('/')
-    }
-    handleClose();
-  }
-  const deleteAnnouncement = async () => {
-    try {
-      const myClassRef = await db.collection("classes").doc(classId).get();
-      const myClassData = await myClassRef.data();
+}
+  
+  // const deleteLecture = async () => {
+  //   try {
+  //     const myClassRef = await db.collection("classes").doc(classId).get();
+  //     const myClassData = await myClassRef.data();
      
-      let tempPosts = myClassData.posts;
+  //     let tempPosts = myClassData.posts;
       
-      var postsAfterDeletion= tempPosts.filter(function(post){
+  //     var postsAfterDeletion= tempPosts.filter(function(post){
        
-        return post.date!=date && post.authorId===authorId 
-      });
+  //       return post.date!=date && post.authorId===authorId 
+  //     });
      
-      // tempPosts.push({
-      //   authorId: user.uid,
-      //   content: announcementContent,
-      //   date: moment().format("MMM Do YY"),
-      //   image: user.photoURL,
-      //   name: user.displayName,
-      // });
-      myClassRef.ref.update({
-        posts: postsAfterDeletion,
-      });
+  //     // tempPosts.push({
+  //     //   authorId: user.uid,
+  //     //   content: announcementContent,
+  //     //   date: moment().format("MMM Do YY"),
+  //     //   image: user.photoURL,
+  //     //   name: user.displayName,
+  //     // });
+  //     myClassRef.ref.update({
+  //       posts: postsAfterDeletion,
+  //     });
       
-    } catch (error) {
-      console.error(error);
-      alert(`There was an error deleting the announcement, please try again!`);
-    }
-    handleClose();
-  };
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert(`There was an error deleting the announcement, please try again!`);
+  //   }
+  //   handleClose();
+  // };
 
   return (
     <div className="announcement">
@@ -125,21 +92,21 @@ function Announcement({ image, name, date, content, authorId ,classId}) {
           </div>
           <div className="announcement__nameAndDate">
             <div className="announcement__name">{name}</div>
-            <div className="announcement__date">{date}</div>
+            
           </div>
         </div>
         <div className="announcement__infoSection">
           
           <div>
-          <IconButton onClick={handleClick}
+          {/* <IconButton onClick={handleClick}
           aria-controls="basic-menu"
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}>
             <MoreVert />
-          </IconButton>
+          </IconButton> */}
       
        
-      <Menu
+      {/* <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
@@ -151,13 +118,25 @@ function Announcement({ image, name, date, content, authorId ,classId}) {
         <MenuItem onClick={deleteAnnouncement}>Delete</MenuItem>
         <MenuItem onClick={handleClose}>Edit</MenuItem>
         <MenuItem onClick={reportPost}>{isReported==false?"Report to Admin":"Reported"}</MenuItem>
-      </Menu>
+      </Menu> */}
     </div>
         </div>
       </div>
-      <div className="announcement__content">{content}</div>
+      <div className="announcement__content"><b>Title:</b> {title}</div>
+      <div className="announcement__content"><b>Submission Date:</b> {date}</div>
+      {note!==""? <div className="announcement__content"><b>Note: {note}</b></div>:""}
+      <div className="announcement__content"><b>Files attached:</b></div>
+    {displayUploadedFiles()}
+      {/* {
+          
+        
+          files.map((file)=>{
+              console.log("FILLLEEEE",file)
+          })
+      } */}
+
     </div>
   );
 }
 
-export default Announcement;
+export default Assignment;

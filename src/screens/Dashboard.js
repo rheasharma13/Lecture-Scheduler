@@ -8,7 +8,7 @@ import ClassCard from "../components/ClassCard";
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
-  const [classes, setClasses] = useState([]);
+  const [classes, setClasses] = React.useState([]);
   const history = useHistory();
 
   const fetchClasses = async () => {
@@ -19,6 +19,7 @@ function Dashboard() {
         .onSnapshot((snapshot) => {
           setClasses(snapshot?.docs[0]?.data()?.enrolledClassrooms);
         });
+        // console.log(classes)
       // 👇🏻 below code doesn't update realtime, so updated to snapshot listener
       // const userData = querySnapshot.docs[0].data();
       // setClasses(userData.enrolledClassrooms);
@@ -39,13 +40,15 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      {classes.length === 0 ? (
+      {
+      classes?.length === 0 ? (
         <div className="dashboard__404">
           No classes found! Join or create one!
         </div>
       ) : (
         <div className="dashboard__classContainer">
-          {classes.map((individualClass) => (
+          {/* {console.log("Classes",classes)} */}
+          {classes?.map((individualClass) => (
             <ClassCard
               creatorName={individualClass.creatorName}
               creatorPhoto={individualClass.creatorPhoto}

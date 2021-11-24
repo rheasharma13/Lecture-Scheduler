@@ -1,4 +1,5 @@
-import { Avatar, IconButton, MenuItem, Menu } from "@material-ui/core";
+import { Avatar, IconButton, MenuItem, Menu, Button } from "@material-ui/core";
+// import {Button} from 'react-bootstrap'
 import { Add, Apps, Menu as MenuIcon } from "@material-ui/icons";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -32,12 +33,8 @@ function Navbar() {
           <IconButton>
             <MenuIcon />
           </IconButton>
-          <img
-            src="https://1000logos.net/wp-content/uploads/2021/05/Google-logo.png"
-            alt="Google Logo"
-            className="navbar__logo"
-          />{" "}
-          <span>Classroom</span>
+         
+          <span>Virtual Classroom</span>
         </div>
         <div className="navbar__right">
           <IconButton
@@ -47,10 +44,23 @@ function Navbar() {
           >
             <Add />
           </IconButton>
-          <IconButton>
+          {/* <IconButton>
             <Apps />
-          </IconButton>
-          <IconButton onClick={logout}>
+          </IconButton> */}
+          <Button>Enrolled Classes</Button>
+          <Button>Created Classes </Button>
+          <Button  onClick={() => {
+                setCreateOpened(true);
+                handleClose();
+              }}>Create Class</Button>
+              <Button   onClick={() => {
+                setJoinOpened(true);
+                handleClose();
+              }}>Join Class</Button>
+              
+                <Button onClick={logout}>Logout</Button>
+              
+              <IconButton onClick={logout}>
             <Avatar src={user?.photoURL} />
           </IconButton>
           <Menu

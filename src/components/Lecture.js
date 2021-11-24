@@ -1,5 +1,6 @@
 import { Button,Menu, MenuItem,IconButton } from "@material-ui/core";
 import {  MoreVert } from "@material-ui/icons";
+
 import React from "react";
 import "./Announcement.css";
 import { auth, db } from "../firebase";
@@ -7,14 +8,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import {useHistory} from "react-router-dom"
 
 
-function Announcement({ image, name, date, content, authorId ,classId}) {
+function Lecture({ creatorId,title,date,time,note,meetingLink,classId,name,image,index}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [user, loading, error] = useAuthState(auth);
   const open = Boolean(anchorEl);
   const [classRef,setClassRef]=React.useState({});
   const[classData,setClassData]=React.useState({});
   const history=useHistory();
-  const [isReported,setReported]=React.useState(false);
+  
   React.useEffect(() => {
     // const myClassRef = await db.collection("classes").doc(id).get();
     // const myClassData = await myClassRef.data();
@@ -38,83 +39,36 @@ function Announcement({ image, name, date, content, authorId ,classId}) {
     setAnchorEl(null);
   };
  
-  const reportPost= async ()=>{
-    if(user)
-    {
+  
+  // const deleteLecture = async () => {
+  //   try {
+  //     const myClassRef = await db.collection("classes").doc(classId).get();
+  //     const myClassData = await myClassRef.data();
      
-    try{
-      setReported(true)
-   
-    
-    let reportedPosts = classData.reportedPosts;
-    let allPosts=classData.posts;
-    for(var post in allPosts)
-    {
-      if(post.authorId==authorId && post.date==date)
-      {
-        console.log("found")
-        post.isReported=true;
-      }
-    }
-    console.log(allPosts)
-    reportedPosts.push(
-     {
+  //     let tempPosts = myClassData.posts;
       
-           authorId: user.uid,
-            content: content,
-            date: date,
-            image:image,
-            name: name,
-         
-     }  
-    )
-    classRef.ref.update({
-      reportedPosts: reportedPosts,
-    posts:allPosts
-    });
-    
-      }
-      catch(error)
-      {
-        console.error(error);
-        alert(`There was an error reporting the post, please try again!`);
-      }
-    }
-    else
-    {
-      history.push('/')
-    }
-    handleClose();
-  }
-  const deleteAnnouncement = async () => {
-    try {
-      const myClassRef = await db.collection("classes").doc(classId).get();
-      const myClassData = await myClassRef.data();
-     
-      let tempPosts = myClassData.posts;
-      
-      var postsAfterDeletion= tempPosts.filter(function(post){
+  //     var postsAfterDeletion= tempPosts.filter(function(post){
        
-        return post.date!=date && post.authorId===authorId 
-      });
+  //       return post.date!=date && post.authorId===authorId 
+  //     });
      
-      // tempPosts.push({
-      //   authorId: user.uid,
-      //   content: announcementContent,
-      //   date: moment().format("MMM Do YY"),
-      //   image: user.photoURL,
-      //   name: user.displayName,
-      // });
-      myClassRef.ref.update({
-        posts: postsAfterDeletion,
-      });
+  //     // tempPosts.push({
+  //     //   authorId: user.uid,
+  //     //   content: announcementContent,
+  //     //   date: moment().format("MMM Do YY"),
+  //     //   image: user.photoURL,
+  //     //   name: user.displayName,
+  //     // });
+  //     myClassRef.ref.update({
+  //       posts: postsAfterDeletion,
+  //     });
       
-    } catch (error) {
-      console.error(error);
-      alert(`There was an error deleting the announcement, please try again!`);
-    }
-    handleClose();
-  };
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert(`There was an error deleting the announcement, please try again!`);
+  //   }
+  //   handleClose();
+  // };
 
   return (
     <div className="announcement">
@@ -125,7 +79,7 @@ function Announcement({ image, name, date, content, authorId ,classId}) {
           </div>
           <div className="announcement__nameAndDate">
             <div className="announcement__name">{name}</div>
-            <div className="announcement__date">{date}</div>
+            
           </div>
         </div>
         <div className="announcement__infoSection">
@@ -139,7 +93,7 @@ function Announcement({ image, name, date, content, authorId ,classId}) {
           </IconButton>
       
        
-      <Menu
+      {/* <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
@@ -151,13 +105,19 @@ function Announcement({ image, name, date, content, authorId ,classId}) {
         <MenuItem onClick={deleteAnnouncement}>Delete</MenuItem>
         <MenuItem onClick={handleClose}>Edit</MenuItem>
         <MenuItem onClick={reportPost}>{isReported==false?"Report to Admin":"Reported"}</MenuItem>
-      </Menu>
+      </Menu> */}
     </div>
         </div>
       </div>
-      <div className="announcement__content">{content}</div>
+      <div className="announcement__content">Title: {title}</div>
+      <div className="announcement__content">Date: {date}</div>
+      <div className="announcement__content">Time: {time}</div>
+      
+      {meetingLink!==""?<div className="announcement__content">Meeting link: <a href={"//"+meetingLink} target="_blank" rel="noopener noreferrer">{meetingLink}</a></div>:""}
+      {note!==""?<div className="announcement__content">{note}</div>:""}
+
     </div>
   );
 }
 
-export default Announcement;
+export default Lecture;
